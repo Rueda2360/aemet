@@ -24,8 +24,9 @@ import okhttp3.Response;
 public class Peticion {
     //ESTADO
     //Clase utilidad que no necesita nada más que poner a funcionar la peticion HTTPs
-    private static final String API_KEY = "?api_key=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbGVydWVkYTIzNjBAZ21haWwuY29tIiwianRpIjoiZjVhMzhjMDAtZGM4NC00NDkzLTk4NDUtZGI5OGNlN2M5YTdjIiwiaXNzIjoiQUVNRVQiLCJpYXQiOjE3MDI5MDM0MDgsInVzZXJJZCI6ImY1YTM4YzAwLWRjODQtNDQ5My05ODQ1LWRiOThjZTdjOWE3YyIsInJvbGUiOiIifQ.9NsM99ts3JfvErq7fVOUtHNxcFU0ZAAmePfKoyJaVqk";
+    private static final String API_KEY = "?api_key=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbGVydWVkYTIzNjBAZ21haWwuY29tIiwianRpIjoiNTkxNjA2MjUtNzc2YS00ZGMzLTgyNzUtNDdlNjhkMTViNjZjIiwiaXNzIjoiQUVNRVQiLCJpYXQiOjE3MDk2MzgwNzEsInVzZXJJZCI6IjU5MTYwNjI1LTc3NmEtNGRjMy04Mjc1LTQ3ZTY4ZDE1YjY2YyIsInJvbGUiOiIifQ.3e6X34K-AuehxFyTUhPzgHwzSfZ2Zs_W8iBVh5jCltI";
     private String cp;
+    private String res;
     //COMPORTAMIENTO
     public Peticion(String cp) {
         this.cp=cp;
@@ -45,14 +46,15 @@ public class Peticion {
             //Segunda llamada al json
             urlFinal=URL;
         }
+        this.res=urlFinal;
+
         //construimos la peticion
         Request peticion = new Request.Builder()
                 //.url("https://opendata.aemet.es/opendata/api/prediccion/especifica/municipio/horaria/29071/?api_key=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbGVydWVkYTIzNjBAZ21haWwuY29tIiwianRpIjoiZjVhMzhjMDAtZGM4NC00NDkzLTk4NDUtZGI5OGNlN2M5YTdjIiwiaXNzIjoiQUVNRVQiLCJpYXQiOjE3MDI5MDM0MDgsInVzZXJJZCI6ImY1YTM4YzAwLWRjODQtNDQ5My05ODQ1LWRiOThjZTdjOWE3YyIsInJvbGUiOiIifQ.9NsM99ts3JfvErq7fVOUtHNxcFU0ZAAmePfKoyJaVqk")
-                .url(urlFinal)
+                .url(res)
                 .get()
                 .addHeader("cache-control", "no-cache")
                 .build();
-
 
         //realizamos la llamada al server, pero en otro thread (con enqueue)
         Call llamada = cliente.newCall(peticion);
@@ -87,8 +89,9 @@ public class Peticion {
                     @Override
                     public void run() {
                         // Code will be executed on the main thread
-                        MainController.getSingleton().setData("");
+
                         MainController.getSingleton().setError(respuesta);
+
                     }
                 });
             }

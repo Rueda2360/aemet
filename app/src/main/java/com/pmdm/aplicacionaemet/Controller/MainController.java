@@ -37,9 +37,9 @@ public class MainController {
     }
 
     //Called from the view
-    public void conseguirCP(String elementoSeleccionado) {
-
-        String cp ="29071";
+    public void conseguirCP(String cp) {
+        //A día de hoy esto es inútil
+        //Lo dejo por si en un futuro quiero mirar cp a mano
         requestData(cp);
 
     }

@@ -19,6 +19,8 @@ import com.pmdm.aplicacionaemet.Controller.PrediccionAdapter;
 import com.pmdm.aplicacionaemet.Model.Prediccion;
 import com.pmdm.aplicacionaemet.R;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -30,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private PrediccionAdapter mAdapter;
     private String[] provincias;
     private ArrayAdapter<String> adaptadorSpinner;
+    HashMap<String, String> provinciasMap;
     private EditText editText;
     private Spinner spinner;
 
@@ -57,7 +60,18 @@ public class MainActivity extends AppCompatActivity {
 
         provincias = getResources().getStringArray(R.array.provincias);
 
-        adaptadorSpinner = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, provincias);
+
+        //Dividimos las provincias y obtengo solamente la segunda parte, ignorando el CP.
+        //Esto es para imprimirlo en el spinner. No quiero el CP en el spinner
+        provinciasMap = new HashMap<>();
+        for (int i = 0; i < provincias.length; i++) {
+
+            String[] valores = provincias[i].split(",");
+            provinciasMap.put(valores[1],valores[0]);
+
+        }
+
+        adaptadorSpinner = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, new ArrayList<>(provinciasMap.keySet()));
         adaptadorSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adaptadorSpinner);
 
@@ -70,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+
                 // Filtramos a partir de la tercera letra
                 if(charSequence.length()>2){
                     String filtro = charSequence.toString().toLowerCase();
@@ -90,7 +105,8 @@ public class MainActivity extends AppCompatActivity {
                 String elementoSeleccionado = (String) parentView.getItemAtPosition(position);
 
                 Toast.makeText(MainActivity.this, elementoSeleccionado, Toast.LENGTH_LONG).show();
-                MainController.getSingleton().conseguirCP(elementoSeleccionado);
+
+                MainController.getSingleton().conseguirCP(provinciasMap.get(elementoSeleccionado));
             }
 
             @Override
