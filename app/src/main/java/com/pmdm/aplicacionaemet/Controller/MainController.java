@@ -13,14 +13,16 @@ public class MainController {
     private static MainController mySingleController;
 
     private List<Prediccion> dataRequested;
-
+    private PrediccionViewModel myViewModel;
 
 
     private static MainActivity activeActivity;
     //Comportamiento
     //Constructor
     private MainController() {
+
         dataRequested = new LinkedList<Prediccion>();
+        myViewModel=null;
     }
 
     //Get instance
@@ -37,16 +39,16 @@ public class MainController {
     }
 
     //Called from the view
-    public void conseguirCP(String cp) {
-        //A día de hoy esto es inútil
-        //Lo dejo por si en un futuro quiero mirar cp a mano
-        requestData(cp);
-
-    }
+//    public void conseguirCP(String cp) {
+//        //A día de hoy esto es inútil
+//        requestData(cp);
+//
+//    }
     public void requestData(String cp) {
 
         Peticion p = new Peticion(cp);
         p.requestData(DATA_URL);
+//        this.myViewModel=myViewModel;
     }
     public void segundaPeticion(String respuesta) {
         Respuesta answer = new Respuesta(respuesta);
@@ -60,7 +62,6 @@ public class MainController {
     public void setData(String json) {
 
         Respuesta answer = new Respuesta(json);
-        List<Prediccion> lista = answer.getData();
 
         dataRequested = answer.getData();
 
@@ -71,9 +72,13 @@ public class MainController {
                     ", Resultado: " + partido.getResultado());
         }*/
         //Load data on the list
-        MainController.activeActivity.accessData();
+        if (myViewModel!=null) myViewModel.setData(dataRequested);
+//        MainController.activeActivity.accessData();
     }
-
+    public List<Prediccion> loadViewModel(PrediccionViewModel myViewModel){
+        this.myViewModel=myViewModel;
+        return dataRequested;
+    }
     public void setError(String error) {
 
         //Load data on the list
@@ -85,5 +90,8 @@ public class MainController {
         activeActivity = myAct;
     }
 
+    public List<Prediccion> getList() {
+        return this.dataRequested;
+    }
 
 }

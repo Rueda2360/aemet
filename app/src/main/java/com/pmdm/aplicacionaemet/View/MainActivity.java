@@ -1,6 +1,7 @@
 package com.pmdm.aplicacionaemet.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,6 +17,8 @@ import android.widget.Toast;
 
 import com.pmdm.aplicacionaemet.Controller.MainController;
 import com.pmdm.aplicacionaemet.Controller.PrediccionAdapter;
+import com.pmdm.aplicacionaemet.Controller.PrediccionViewHolder;
+import com.pmdm.aplicacionaemet.Controller.PrediccionViewModel;
 import com.pmdm.aplicacionaemet.Model.Prediccion;
 import com.pmdm.aplicacionaemet.R;
 
@@ -36,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText editText;
     private Spinner spinner;
 
+
     private static MainActivity myActiveActivity;
 
     @Override
@@ -50,6 +54,29 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mAdapter);
         // Give the RecyclerView a default layout manager.
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        PrediccionViewModel vmodel = new ViewModelProvider(this).get(PrediccionViewModel.class);
+        vmodel.getPredicciones().observe(this, predicciones -> {
+
+
+            if(predicciones!=null){
+                mList.clear();
+                for(Prediccion prediccion: predicciones){
+                    mList.add(prediccion);
+
+                }
+            }
+            mAdapter.notifyDataSetChanged();
+
+        });
+//
+//        mRecyclerView = findViewById(R.id.rv_prices);
+//        // Create an adapter and supply the data to be displayed.
+//        mAdapter = new PrediccionAdapter( this, mList);
+//        // Connect the adapter with the RecyclerView.
+//        mRecyclerView.setAdapter(mAdapter);
+//        // Give the RecyclerView a default layout manager.
+//        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         MainActivity.myActiveActivity = this;
         MainController.setActivity(this);
@@ -106,7 +133,8 @@ public class MainActivity extends AppCompatActivity {
 
                 Toast.makeText(MainActivity.this, elementoSeleccionado, Toast.LENGTH_LONG).show();
 
-                MainController.getSingleton().conseguirCP(provinciasMap.get(elementoSeleccionado));
+//                vmodel.getPredicciones(provinciasMap.get(elementoSeleccionado));
+                MainController.getSingleton().requestData(provinciasMap.get(elementoSeleccionado));
             }
 
             @Override

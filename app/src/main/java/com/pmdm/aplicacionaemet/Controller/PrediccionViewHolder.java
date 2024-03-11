@@ -4,6 +4,7 @@ package com.pmdm.aplicacionaemet.Controller;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.pmdm.aplicacionaemet.R;
@@ -43,5 +44,6 @@ public class PrediccionViewHolder extends RecyclerView.ViewHolder {
     public void setPrecipitacion(String data) {
         tvPrecipitacion.setText(data);
     }
+
 
 }
